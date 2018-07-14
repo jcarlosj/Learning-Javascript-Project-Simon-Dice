@@ -4,20 +4,28 @@ let keys = generateKeys( levels );
 
 // Siguiente nivel
 function nextLevel( currentLevel ) {
-    console .log( 'nextLevel( 6 ) debe mostrar ', currentLevel + 1, ' teclas' );
+    console .log( 'Debe mostrar ', currentLevel + 1, ' teclas' );
 
     // Valida si se ha superado el
     if( currentLevel == levels ) {
-        return alert( 'Wow! Excelente has ganado!' );       // return detiene la ejecución
+        return swal({               // return detiene la ejecución
+            timer: 1000,
+            title: 'Wow! Excelente has ganado!',
+            type: 'success'
+        });
     }
 
-    alert( `Nivel ${ currentLevel + 1 }` );                 // Muestra el nivel actual
+    swal({                         // Muestra el nivel actual
+        timer: 1000,
+        title: `Nivel ${ currentLevel + 1 }`,
+        showConfirmButton: false
+    });
     /* Juego: Muestra la secuencia de teclas por nivel al jugador */
     for( let i = 0; i <= currentLevel; i++ ) {
-        setTimeout( () => activateEl( keys[ i ] ), 1000 * ( i + 1 ) );
+        setTimeout( () => activateEl( keys[ i ] ), 1000 * ( i + 1 ) + 1000 );
     }
 
-    /* Juego: espera que el jugador presione la primera tecla */
+    /* Juego: espera que el jugador presione la primera tecla (TURNO) */
     let ronda = 0,
         currentKey = keys[ ronda ];
     // Agrega manejador de eventos
@@ -40,7 +48,24 @@ function nextLevel( currentLevel ) {
         else {
             activateEl( event .keyCode, { fail: true } );               // Activa el estilo 'fail' por que falló
             window .removeEventListener( 'keydown', onkeydown );        // Elimina el manejador de eventos
-            alert( 'Lo siento, perdiste. Vuelve a intentarlo!' );
+            setTimeout( () => {
+                swal({
+                    timer: 3000,
+                    title: 'Lo siento, perdiste. Vuelve a intentarlo!',
+                    text: 'Quiéres jugar de nuevo?',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí',
+                    cancelButtonText: 'No',
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    closeOnConfirm: true
+                }).then( result => {
+                  if ( result .value ) {
+                    keys = generateKeys( levels );
+                    nextLevel( 0 );
+                  }
+                });
+            }, 2000 );
         }
     }
 }
