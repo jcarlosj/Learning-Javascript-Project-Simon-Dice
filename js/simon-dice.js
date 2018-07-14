@@ -16,6 +16,14 @@ function activateEl( keyCode, options = {} ) {
     else if( options .fail ) {
         el .classList .add( 'fail' );       // Agrega una clase al listado de clases del elemento
     }
+
+    // Temporizador para eliminar clases agregadas al elemento
+    setTimeout( () => deactivateEl( el ), 1000 );
+}
+
+// Desactiva estilo al presionar tecla de acuerdo al estado
+function deactivateEl( el ) {
+    el .className = 'key';      // Elimina el listado de clases y define exclusivamente la clase 'key'
 }
 
 /* Prueba */
