@@ -1,1 +1,4 @@
-alert( 'Sim\u00f3n dice...!' );
+/* Simón Dice: */
+document .addEventListener( 'keydown', function( ev ) {
+    console.log( 'keyCode: ', ev.keyCode );
+});
