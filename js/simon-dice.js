@@ -12,14 +12,42 @@ function nextLevel( currentLevel ) {
     }
 
     alert( `Nivel ${ currentLevel + 1 }` );                 // Muestra el nivel actual
-    /* Muestra la secuencia de teclas por nivel */
+    /* Juego: Muestra la secuencia de teclas por nivel al jugador */
     for( let i = 0; i <= currentLevel; i++ ) {
         setTimeout( () => activateEl( keys[ i ] ), 1000 * ( i + 1 ) );
     }
+
+    /* Juego: espera que el jugador presione la primera tecla */
+    let ronda = 0,
+        currentKey = keys[ ronda ];
+    // Agrega manejador de eventos
+    window .addEventListener( 'keydown', onkeydown );
+
+    // Internal Function: Valida cuando una tecla es presionada
+    function onkeydown( event ) {
+        // Valida si la tecla presionada es igual a la actual en la secuencia generada
+        if( event .keyCode == currentKey ) {
+            activateEl( currentKey, { success: true } );                // Activa el estilo 'success' por que acerto
+            ronda++;                                                    // Avanza a la siguiente ronda
+            if( ronda > currentLevel ) {                                // Valida el que la ronda sea mayor que el nivel (en la secuencia)
+                window .removeEventListener( 'keydown', onkeydown );    // Elimina el manejador de eventos
+                setTimeout( () => {
+                    nextLevel( ronda );                                 // Avanza al siguiente nivel
+                }, 1500 );
+            }
+            currentKey = keys[ ronda ];                                 // Reasigna la tecla actual de la secuencia de teclas generadas (la siguente en la secuencia)
+        }
+        else {
+            activateEl( event .keyCode, { fail: true } );               // Activa el estilo 'fail' por que falló
+            window .removeEventListener( 'keydown', onkeydown );        // Elimina el manejador de eventos
+            alert( 'Lo siento, perdiste. Vuelve a intentarlo!' );
+        }
+    }
 }
+
 /* Pruebas */
-//nextLevel( 0 );       // Nivel 1
-nextLevel( 6 );       // Nivel 7
+nextLevel( 0 );       // Nivel 1 (El inicio del juego)
+//nextLevel( 6 );       // Nivel 7
 //nextLevel( 15 );      // Nivel 16 (no existe, has ganado)
 
 
