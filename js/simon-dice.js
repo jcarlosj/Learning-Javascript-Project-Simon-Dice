@@ -1,5 +1,27 @@
 /* Simón Dice: */
 const levels = 15;
+let keys = generateKeys( levels );
+
+// Siguiente nivel
+function nextLevel( currentLevel ) {
+    console .log( 'nextLevel( 6 ) debe mostrar ', currentLevel + 1, ' teclas' );
+
+    // Valida si se ha superado el
+    if( currentLevel == levels ) {
+        return alert( 'Wow! Excelente has ganado!' );       // return detiene la ejecución
+    }
+
+    alert( `Nivel ${ currentLevel + 1 }` );                 // Muestra el nivel actual
+    /* Muestra la secuencia de teclas por nivel */
+    for( let i = 0; i <= currentLevel; i++ ) {
+        setTimeout( () => activateEl( keys[ i ] ), 1000 * ( i + 1 ) );
+    }
+}
+/* Pruebas */
+//nextLevel( 0 );       // Nivel 1
+nextLevel( 6 );       // Nivel 7
+//nextLevel( 15 );      // Nivel 16 (no existe, has ganado)
+
 
 // Genera una secuencia de keyCodes aleatorios de teclas 'a' a la 'z'(65 a 90)
 function generateKeys( levels ) {
@@ -45,9 +67,3 @@ function activateEl( keyCode, options = {} ) {
 function deactivateEl( el ) {
     el .className = 'key';      // Elimina el listado de clases y define exclusivamente la clase 'key'
 }
-
-/* Prueba */
-activateEl( 65 );                       // a
-activateEl( 83, { success: true } );    // s
-activateEl( 68, { fail: true } );       // d
-console .log( 'Teclas generadas', keys = generateKeys( levels ) );
